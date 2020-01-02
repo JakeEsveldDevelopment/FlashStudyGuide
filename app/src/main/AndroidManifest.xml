@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".newquiz.NewQuizActivity"></activity>
         <activity
             android:name=".getting_started.GettingStartedActivity"
             android:label="@string/title_activity_getting_started"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SplashScreenActivity" />
         <activity
             android:name=".main.MainActivity"

@@ -1,19 +1,31 @@
 package com.jakeesveld.flashstudyguide.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakeesveld.flashstudyguide.R;
+import com.jakeesveld.flashstudyguide.model.Quiz;
+import com.jakeesveld.flashstudyguide.newquiz.NewQuizActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    MainSavedQuizAdapter adapter;
+    List<Quiz> quizList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +33,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        quizList = new ArrayList<>();
+
+        recyclerView = findViewById(R.id.recycler_view);
+        adapter = new MainSavedQuizAdapter(quizList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(MainActivity.this, NewQuizActivity.class));
             }
         });
     }
