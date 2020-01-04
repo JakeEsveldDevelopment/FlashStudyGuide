@@ -3,13 +3,25 @@ package com.jakeesveld.flashstudyguide.model;
 public class Question {
 
     private String text, answer, hint;
-    private int id;
+    private int id, type;
 
-    public Question(String text, String answer, String hint, int id) {
+    public static final int TYPE_MULTIPLE = 0;
+    public static final int TYPE_BOOLEAN = 1;
+
+    public Question(String text, String answer, String hint, int id, int type) {
         this.text = text;
         this.answer = answer;
         this.hint = hint;
         this.id = id;
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getText() {

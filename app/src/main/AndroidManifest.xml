@@ -12,7 +12,7 @@
         <activity android:name=".newquiz.NewQuizActivity"></activity>
         <activity
             android:name=".getting_started.GettingStartedActivity"
-            android:label="@string/title_activity_getting_started"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SplashScreenActivity" />
         <activity

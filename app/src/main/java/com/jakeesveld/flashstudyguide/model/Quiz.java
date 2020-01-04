@@ -6,15 +6,25 @@ public class Quiz {
 
     private String name, description;
     private List<Question> questions;
+    private int type;
 
 
-    public Quiz(String name, String description, List<Question> questions) {
+    public Quiz(String name, String description, List<Question> questions, int type) {
         this.name = name;
         this.description = description;
         this.questions = questions;
+        this.type = type;
     }
 
     public Quiz() {
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getName() {
