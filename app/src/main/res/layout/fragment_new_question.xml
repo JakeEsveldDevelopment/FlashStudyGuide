@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".newquiz.NewQuestionFragment">
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="New Question"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_question"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Question..."
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_title" />
+
+    <EditText
+        android:id="@+id/edit_question_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="hint (optional)"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_question" />
+
+    <TextView
+        android:id="@+id/text_answer_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Answer"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_question_hint" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_boolean"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_answer_title"
+        tools:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/radio_false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="False" />
+
+        <RadioButton
+            android:id="@+id/radio_true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="True" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radio_multiple"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_answer_title">
+
+        <RadioButton
+            android:id="@+id/radio_multiple_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A" />
+
+        <EditText
+            android:id="@+id/edit_multiple_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Answer..."
+            android:inputType="textMultiLine" />
+
+        <RadioButton
+            android:id="@+id/radio_multiple_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="B" />
+
+        <EditText
+            android:id="@+id/edit_multiple_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Answer..."
+            android:inputType="textMultiLine" />
+
+        <RadioButton
+            android:id="@+id/radio_multiple_c"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="C" />
+
+        <EditText
+            android:id="@+id/edit_multiple_c"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Answer..."
+            android:inputType="textMultiLine" />
+
+        <RadioButton
+            android:id="@+id/radio_multiple_d"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="D" />
+
+        <EditText
+            android:id="@+id/edit_multiple_d"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Answer..."
+            android:inputType="textMultiLine" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radio_group_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_answer_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_question_hint">
+
+        <RadioButton
+            android:id="@+id/radio_type_boolean"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="True/False" />
+
+        <RadioButton
+            android:id="@+id/radio_type_multiple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Multiple Choice" />
+    </RadioGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
