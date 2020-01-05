@@ -41,7 +41,11 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
                 break;
         }
 
-        holder.text_question.setText(data.getText().substring(0, 50));
+        if(data.getText().length() > 50) {
+            holder.text_question.setText(data.getText().substring(0, 50));
+        }else{
+            holder.text_question.setText(data.getText());
+        }
     }
 
     @Override

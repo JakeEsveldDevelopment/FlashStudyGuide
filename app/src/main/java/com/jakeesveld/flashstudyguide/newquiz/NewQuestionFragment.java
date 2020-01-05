@@ -21,8 +21,10 @@ import com.jakeesveld.flashstudyguide.model.Question;
 
 public class NewQuestionFragment extends DialogFragment {
     private static final String ARG_TYPE = "type";
+    private static final String ARG_ID = "id";
 
-    private String questionType;
+    private int questionType;
+    private int questionId;
     private EditText editQuestion, editHint;
     private RadioGroup radioGroupType, radioGroupMultiple, radioGroupBoolean;
     private RadioButton radioTrue, radioFalse, radioMultipleA, radioMultipleB,
@@ -35,10 +37,11 @@ public class NewQuestionFragment extends DialogFragment {
     }
 
 
-    public static NewQuestionFragment newInstance(String questionType) {
+    public static NewQuestionFragment newInstance(int questionType, int questionId) {
         NewQuestionFragment fragment = new NewQuestionFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_TYPE, questionType);
+        args.putInt(ARG_TYPE, questionType);
+        args.putInt(ARG_ID, questionId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +50,8 @@ public class NewQuestionFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            questionType = getArguments().getString(ARG_TYPE);
+            questionType = getArguments().getInt(ARG_TYPE);
+            questionId = getArguments().getInt(ARG_ID);
         }
     }
 
@@ -92,29 +96,68 @@ public class NewQuestionFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 if(checkValidFields()){
-                    // Construct question and return to activity
+                    Question question = new Question(
+                            editQuestion.getText().toString(),
+                            getAnswer(),
+                            editHint.getText().toString(),
+                            questionId,
+                            getType()
+                    );
+                    onButtonPressed(question);
+                    dismiss();
                 }
             }
         });
+    }
+
+    private int getType() {
+        if(questionType != 0){
+            return questionType;
+        }
+        switch (radioGroupType.getCheckedRadioButtonId()){
+            case R.id.radio_type_boolean:
+                return NewQuizActivity.TYPE_BOOLEAN;
+            case R.id.radio_type_multiple:
+                return NewQuizActivity.TYPE_MULTIPLE;
+        }
+        return 0;
+    }
+
+    private String getAnswer() {
+        switch(getType()){
+            case NewQuizActivity.TYPE_BOOLEAN:
+                return radioTrue.isChecked() ? "True" : "False";
+            case NewQuizActivity.TYPE_MULTIPLE:
+                if(radioMultipleA.isChecked()){
+                    return "A";
+                }else if(radioMultipleB.isChecked()){
+                    return "B";
+                }else if(radioMultipleC.isChecked()){
+                    return "C";
+                }else{
+                    return "D";
+                }
+        }
+        return "";
     }
 
     private boolean checkValidFields() {
         if(editQuestion.getText().toString().equals("")){
             return false;
         }
-        if(questionType.equals(NewQuizActivity.TYPE_MULTIPLE) ||
+        if(questionType == (NewQuizActivity.TYPE_MULTIPLE) ||
                 radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_multiple){
             if(radioGroupMultiple.getCheckedRadioButtonId() == -1){
                 return false;
             }
         }
-        if(questionType.equals(NewQuizActivity.TYPE_BOOLEAN)||
+        if(questionType == (NewQuizActivity.TYPE_BOOLEAN)||
                 radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_boolean){
             if(radioGroupBoolean.getCheckedRadioButtonId() == -1){
                 return false;
             }
         }
-        if(questionType.equals("") && radioGroupType.getCheckedRadioButtonId() == -1){
+        if(questionType == 0 && radioGroupType.getCheckedRadioButtonId() == -1){
             return false;
         }
         return true;

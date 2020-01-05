@@ -21,9 +21,9 @@ import java.util.List;
 
 public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener{
 
-    public static final String TYPE_BOOLEAN = "boolean";
-    public static final String TYPE_MULTIPLE = "multiple";
-    public static final String TYPE_BOTH = "both";
+    public static final int TYPE_BOOLEAN = 1;
+    public static final int TYPE_MULTIPLE = 2;
+    public static final int TYPE_BOTH = 3;
     public static final String NEW_QUESTION_FRAGMENT_TAG = "newQuestion";
 
 
@@ -62,7 +62,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
                 if(checkTypeSelected()) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(NewQuestionFragment.newInstance(getQuestionType()), NEW_QUESTION_FRAGMENT_TAG)
+                            .add(NewQuestionFragment.newInstance(getQuestionType(), questionsList.size()), NEW_QUESTION_FRAGMENT_TAG)
                             .addToBackStack(null)
                             .commit();
                 }else{
@@ -77,7 +77,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         return radioGroupType.getCheckedRadioButtonId() != -1;
     }
 
-    private String getQuestionType() {
+    private int getQuestionType() {
         switch(radioGroupType.getCheckedRadioButtonId()){
             case R.id.radio_boolean:
                 return TYPE_BOOLEAN;
@@ -86,11 +86,12 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
             case R.id.radio_both:
                 return TYPE_BOTH;
         }
-        return null;
+        return 0;
     }
 
     @Override
     public void onQuestionCompleted(Question question) {
-
+        questionsList.add(question);
+        adapter.notifyDataSetChanged();
     }
 }
