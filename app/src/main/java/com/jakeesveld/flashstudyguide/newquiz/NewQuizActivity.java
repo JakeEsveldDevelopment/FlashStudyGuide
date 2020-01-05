@@ -46,7 +46,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
         editName = findViewById(R.id.edit_name);
         editDescription = findViewById(R.id.edit_description);
-        radioMultiple = findViewById(R.id.radio_multiple);
+        radioMultiple = findViewById(R.id.radio_group_multiple);
         radioBoolean = findViewById(R.id.radio_boolean);
         radioBoth = findViewById(R.id.radio_both);
         buttonAddQuestion = findViewById(R.id.button_add_question);
@@ -74,14 +74,14 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
     }
 
     private boolean checkTypeSelected() {
-        return radioGroupType.getCheckedRadioButtonId() != 0;
+        return radioGroupType.getCheckedRadioButtonId() != -1;
     }
 
     private String getQuestionType() {
         switch(radioGroupType.getCheckedRadioButtonId()){
             case R.id.radio_boolean:
                 return TYPE_BOOLEAN;
-            case R.id.radio_multiple:
+            case R.id.radio_group_multiple:
                 return TYPE_MULTIPLE;
             case R.id.radio_both:
                 return TYPE_BOTH;
