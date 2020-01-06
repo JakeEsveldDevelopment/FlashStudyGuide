@@ -19,13 +19,14 @@ import com.jakeesveld.flashstudyguide.model.Question;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener{
+public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener, NewQuizContract.view{
 
     public static final int TYPE_BOOLEAN = 1;
     public static final int TYPE_MULTIPLE = 2;
     public static final int TYPE_BOTH = 3;
     public static final String NEW_QUESTION_FRAGMENT_TAG = "newQuestion";
 
+    NewQuizContract.presenter presenter;
 
     EditText editName, editDescription;
     RadioButton radioMultiple, radioBoolean, radioBoth;
@@ -43,6 +44,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
         questionsList = new ArrayList<>();
         newQuestionFragment = new NewQuestionFragment();
+        presenter = new NewQuizPresenter(questionsList, this);
 
         editName = findViewById(R.id.edit_name);
         editDescription = findViewById(R.id.edit_description);
@@ -91,7 +93,12 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
     @Override
     public void onQuestionCompleted(Question question) {
-        questionsList.add(question);
+        presenter.updateList(question);
+    }
+
+    @Override
+    public void updateView(List<Question> questionList) {
+        this.questionsList = questionList;
         adapter.notifyDataSetChanged();
     }
 }

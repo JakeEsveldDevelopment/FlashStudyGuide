@@ -166,6 +166,7 @@ public class NewQuestionFragment extends DialogFragment {
     private void toggleVisibleView(int i) {
         radioGroupMultiple.setVisibility(View.GONE);
         radioGroupBoolean.setVisibility(View.GONE);
+        buttonSubmit.setVisibility(View.VISIBLE);
         switch(i){
             case R.id.radio_type_boolean:
                 radioGroupBoolean.setVisibility(View.VISIBLE);
@@ -189,6 +190,7 @@ public class NewQuestionFragment extends DialogFragment {
                 break;
             case NewQuizActivity.TYPE_BOTH:
                 radioGroupType.setVisibility(View.VISIBLE);
+                buttonSubmit.setVisibility(View.GONE);
                 break;
         }
     }
