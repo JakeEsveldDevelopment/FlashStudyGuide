@@ -1,5 +1,6 @@
 package com.jakeesveld.flashstudyguide.newquiz;
 
+import com.jakeesveld.flashstudyguide.data.QuizRepo;
 import com.jakeesveld.flashstudyguide.model.Question;
 import com.jakeesveld.flashstudyguide.model.Quiz;
 
@@ -9,10 +10,12 @@ public class NewQuizPresenter implements NewQuizContract.presenter {
 
     List<Question> questionList;
     NewQuizContract.view view;
+    QuizRepo repo;
 
-    public NewQuizPresenter(List<Question> questionList, NewQuizContract.view view) {
+    public NewQuizPresenter(List<Question> questionList, NewQuizContract.view view, QuizRepo repo) {
         this.questionList = questionList;
         this.view = view;
+        this.repo = repo;
     }
 
     @Override
@@ -23,7 +26,10 @@ public class NewQuizPresenter implements NewQuizContract.presenter {
 
     @Override
     public void saveQuiz(Quiz quiz) {
-
+        repo.AddQuiz(quiz);
+        for(Question question: quiz.getQuestions()){
+            repo.addQuestion(question);
+        }
     }
 
     @Override

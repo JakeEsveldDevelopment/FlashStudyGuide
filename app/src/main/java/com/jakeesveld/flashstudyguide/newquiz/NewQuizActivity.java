@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jakeesveld.flashstudyguide.FlashApplication;
 import com.jakeesveld.flashstudyguide.R;
 import com.jakeesveld.flashstudyguide.model.Question;
 import com.jakeesveld.flashstudyguide.model.Quiz;
@@ -44,9 +45,10 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_quiz);
 
+
         questionsList = new ArrayList<>();
         newQuestionFragment = new NewQuestionFragment();
-        presenter = new NewQuizPresenter(questionsList, this);
+        presenter = new NewQuizPresenter(questionsList, this, ((FlashApplication)this.getApplication()).getQuizRepo());
         quiz = new Quiz();
 
         editName = findViewById(R.id.edit_name);

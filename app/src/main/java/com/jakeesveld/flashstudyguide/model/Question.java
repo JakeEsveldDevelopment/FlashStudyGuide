@@ -1,6 +1,7 @@
 package com.jakeesveld.flashstudyguide.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -25,8 +26,6 @@ public class Question {
         this.quizId = quizId;
     }
 
-    public Question() {
-    }
 
     public int getQuestionNumber() {
         return questionNumber;

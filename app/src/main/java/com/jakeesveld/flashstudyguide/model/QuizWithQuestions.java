@@ -18,8 +18,6 @@ public class QuizWithQuestions {
         this.questions = questions;
     }
 
-    public QuizWithQuestions() {
-    }
 
     public Quiz getQuiz() {
         return quiz;

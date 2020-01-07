@@ -1,21 +1,23 @@
 package com.jakeesveld.flashstudyguide.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
 
-@Entity
+@Entity(tableName = "quiz")
 public class Quiz {
 
     @PrimaryKey(autoGenerate = true)
     public long quizId;
 
     private String name, description;
+    @Ignore
     private List<Question> questions;
     private int type;
 
-
+    @Ignore
     public Quiz(String name, String description, List<Question> questions, int type) {
         this.name = name;
         this.description = description;
@@ -29,6 +31,7 @@ public class Quiz {
         this.type = type;
     }
 
+    @Ignore
     public Quiz(QuizWithQuestions quizWithQuestions){
         this.name = quizWithQuestions.getQuiz().getName();
         this.description = quizWithQuestions.getQuiz().getDescription();
@@ -36,6 +39,7 @@ public class Quiz {
         this.questions = quizWithQuestions.getQuestions();
     }
 
+    @Ignore
     public Quiz() {
     }
 
