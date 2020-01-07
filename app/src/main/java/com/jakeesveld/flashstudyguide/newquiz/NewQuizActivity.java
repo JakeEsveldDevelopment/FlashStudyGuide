@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakeesveld.flashstudyguide.R;
 import com.jakeesveld.flashstudyguide.model.Question;
+import com.jakeesveld.flashstudyguide.model.Quiz;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
     public static final String NEW_QUESTION_FRAGMENT_TAG = "newQuestion";
 
     NewQuizContract.presenter presenter;
+    Quiz quiz;
 
     EditText editName, editDescription;
     RadioButton radioMultiple, radioBoolean, radioBoth;
@@ -45,6 +47,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         questionsList = new ArrayList<>();
         newQuestionFragment = new NewQuestionFragment();
         presenter = new NewQuizPresenter(questionsList, this);
+        quiz = new Quiz();
 
         editName = findViewById(R.id.edit_name);
         editDescription = findViewById(R.id.edit_description);
@@ -64,7 +67,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
                 if(checkTypeSelected()) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(NewQuestionFragment.newInstance(getQuestionType(), questionsList.size()), NEW_QUESTION_FRAGMENT_TAG)
+                            .add(NewQuestionFragment.newInstance(getQuestionType(), questionsList.size(), quiz.getQuizId()), NEW_QUESTION_FRAGMENT_TAG)
                             .addToBackStack(null)
                             .commit();
                 }else{

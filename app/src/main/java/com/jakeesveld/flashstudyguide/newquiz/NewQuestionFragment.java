@@ -21,10 +21,12 @@ import com.jakeesveld.flashstudyguide.model.Question;
 
 public class NewQuestionFragment extends DialogFragment {
     private static final String ARG_TYPE = "type";
-    private static final String ARG_ID = "id";
+    private static final String ARG_ID = "quizId";
+    private static final String ARG_QUESTION_ID = "questionId";
 
     private int questionType;
     private int questionId;
+    private long quizId;
     private EditText editQuestion, editHint;
     private RadioGroup radioGroupType, radioGroupMultiple, radioGroupBoolean;
     private RadioButton radioTrue, radioFalse, radioMultipleA, radioMultipleB,
@@ -37,11 +39,12 @@ public class NewQuestionFragment extends DialogFragment {
     }
 
 
-    public static NewQuestionFragment newInstance(int questionType, int questionId) {
+    public static NewQuestionFragment newInstance(int questionType, int questionId, long quizId) {
         NewQuestionFragment fragment = new NewQuestionFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_TYPE, questionType);
-        args.putInt(ARG_ID, questionId);
+        args.putLong(ARG_ID, quizId);
+        args.putInt(ARG_QUESTION_ID, questionId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,6 +55,7 @@ public class NewQuestionFragment extends DialogFragment {
         if (getArguments() != null) {
             questionType = getArguments().getInt(ARG_TYPE);
             questionId = getArguments().getInt(ARG_ID);
+            quizId = getArguments().getLong(ARG_QUESTION_ID);
         }
     }
 
@@ -101,7 +105,8 @@ public class NewQuestionFragment extends DialogFragment {
                             getAnswer(),
                             editHint.getText().toString(),
                             questionId,
-                            getType()
+                            getType(),
+                            quizId
                     );
                     onButtonPressed(question);
                     dismiss();

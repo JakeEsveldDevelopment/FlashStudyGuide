@@ -1,8 +1,15 @@
 package com.jakeesveld.flashstudyguide.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 
+@Entity
 public class Quiz {
+
+    @PrimaryKey(autoGenerate = true)
+    public long quizId;
 
     private String name, description;
     private List<Question> questions;
@@ -16,7 +23,28 @@ public class Quiz {
         this.type = type;
     }
 
+    public Quiz(String name, String description, int type) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+    }
+
+    public Quiz(QuizWithQuestions quizWithQuestions){
+        this.name = quizWithQuestions.getQuiz().getName();
+        this.description = quizWithQuestions.getQuiz().getDescription();
+        this.type = quizWithQuestions.getQuiz().getType();
+        this.questions = quizWithQuestions.getQuestions();
+    }
+
     public Quiz() {
+    }
+
+    public long getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(long quizId) {
+        this.quizId = quizId;
     }
 
     public int getType() {
