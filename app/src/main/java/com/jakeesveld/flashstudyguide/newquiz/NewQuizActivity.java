@@ -5,6 +5,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.RadioGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakeesveld.flashstudyguide.FlashApplication;
 import com.jakeesveld.flashstudyguide.R;
+import com.jakeesveld.flashstudyguide.main.MainActivity;
 import com.jakeesveld.flashstudyguide.model.Question;
 import com.jakeesveld.flashstudyguide.model.Quiz;
 
@@ -30,10 +33,11 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
     NewQuizContract.presenter presenter;
     Quiz quiz;
+    Context context;
 
     EditText editName, editDescription;
     RadioButton radioMultiple, radioBoolean, radioBoth;
-    Button buttonAddQuestion;
+    Button buttonAddQuestion, buttonSubmitQuiz;
     RecyclerView recyclerQuestions;
     QuestionsAdapter adapter;
     List<Question> questionsList;
@@ -48,6 +52,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
         questionsList = new ArrayList<>();
         newQuestionFragment = new NewQuestionFragment();
+        context = this;
         presenter = new NewQuizPresenter(questionsList, this, ((FlashApplication)this.getApplication()).getQuizRepo());
         quiz = new Quiz();
 
@@ -57,6 +62,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         radioBoolean = findViewById(R.id.radio_boolean);
         radioBoth = findViewById(R.id.radio_both);
         buttonAddQuestion = findViewById(R.id.button_add_question);
+        buttonSubmitQuiz = findViewById(R.id.button_submit_quiz);
         recyclerQuestions = findViewById(R.id.recycler_questions);
         radioGroupType = findViewById(R.id.radio_group_type);
         adapter = new QuestionsAdapter(questionsList);
@@ -66,6 +72,9 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         buttonAddQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //If type of question has been selected, show new question fragment
+                
                 if(checkTypeSelected()) {
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -78,6 +87,40 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
             }
         });
 
+        buttonSubmitQuiz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //If quiz has name and at least one question, submit. Else show warning
+
+                if(checkFieldsValid()){
+                    submitQuiz();
+                }else{
+                    Snackbar.make(view,
+                            "Please name quiz and give at least one question before submitting",
+                            Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private void submitQuiz() {
+        Quiz quiz = new Quiz(
+                editName.getText().toString(),
+                editDescription.getText().toString(),
+                questionsList,
+                getQuestionType()
+        );
+        presenter.saveQuiz(quiz);
+        startActivity(new Intent(NewQuizActivity.this, MainActivity.class));
+    }
+
+    private boolean checkFieldsValid() {
+        if(!editName.getText().toString().equals("") && questionsList.size() > 0){
+            return true;
+        }
+        return false;
     }
 
     private boolean checkTypeSelected() {

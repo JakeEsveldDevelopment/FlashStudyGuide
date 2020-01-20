@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakeesveld.flashstudyguide.FlashApplication;
 import com.jakeesveld.flashstudyguide.R;
+import com.jakeesveld.flashstudyguide.data.QuizRepo;
 import com.jakeesveld.flashstudyguide.model.Quiz;
 import com.jakeesveld.flashstudyguide.newquiz.NewQuizActivity;
 
@@ -21,11 +23,13 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityContract.view {
 
     RecyclerView recyclerView;
     MainSavedQuizAdapter adapter;
     List<Quiz> quizList;
+    QuizRepo repo;
+    MainActivityContract.presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         quizList = new ArrayList<>();
+        repo = ((FlashApplication)this.getApplication()).getQuizRepo();
+        presenter = new MainPresenter(repo, this);
+
 
         recyclerView = findViewById(R.id.recycler_view);
         adapter = new MainSavedQuizAdapter(quizList);
@@ -47,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, NewQuizActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getQuizList();
     }
 
     @Override
@@ -69,5 +82,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void displayQuizList(List<Quiz> quizList) {
+        this.quizList = quizList;
+        adapter.notifyDataSetChanged();
     }
 }

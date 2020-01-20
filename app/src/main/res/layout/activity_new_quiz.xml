@@ -136,9 +136,19 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_questions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_submit_quiz"
         app:layout_constraintTop_toBottomOf="@+id/text_questions_header"
         tools:layout_editor_absoluteX="182dp" />
+
+    <Button
+        android:id="@+id/button_submit_quiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Quiz"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

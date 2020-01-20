@@ -19,6 +19,16 @@ public class QuizRepo {
         convertToQuizFromDBObject(quizWithQuestions);
     }
 
+    public List<Quiz> getQuizList(){
+        if(quizList == null){
+            List<QuizWithQuestions> quizDBList = quizDAO.getAllQuizes();
+            for(QuizWithQuestions quizDB: quizDBList){
+                quizList.add(new Quiz(quizDB));
+            }
+        }
+        return quizList;
+    }
+
     public void AddQuiz(Quiz quiz){
         quizDAO.insertQuiz(quiz);
         quizList.add(quiz);

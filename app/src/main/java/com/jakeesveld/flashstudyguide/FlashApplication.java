@@ -9,8 +9,20 @@ public class FlashApplication extends Application {
 
     public QuizRepo getQuizRepo(){
         if(quizRepo == null){
-            quizRepo = new QuizRepo(this);
+            getRepoThread.start();
+            try {
+                getRepoThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return quizRepo;
     }
+
+    private Thread getRepoThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            quizRepo = new QuizRepo(FlashApplication.this);
+        }
+    });
 }
