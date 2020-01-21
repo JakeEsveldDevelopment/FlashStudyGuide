@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void displayQuizList(List<Quiz> quizList) {
-        this.quizList = quizList;
+        this.quizList.clear();
+        this.quizList.addAll(quizList);
         adapter.notifyDataSetChanged();
     }
 }

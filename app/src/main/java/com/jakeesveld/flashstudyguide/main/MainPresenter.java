@@ -1,6 +1,9 @@
 package com.jakeesveld.flashstudyguide.main;
 
 import com.jakeesveld.flashstudyguide.data.QuizRepo;
+import com.jakeesveld.flashstudyguide.model.Quiz;
+
+import java.util.List;
 
 public class MainPresenter implements MainActivityContract.presenter{
     QuizRepo repo;
@@ -13,6 +16,11 @@ public class MainPresenter implements MainActivityContract.presenter{
 
     @Override
     public void getQuizList() {
-        view.displayQuizList(repo.getQuizList());
+        repo.getQuizList(new QuizRepo.ListCallback() {
+            @Override
+            public void execute(List<Quiz> quizList) {
+                view.displayQuizList(quizList);
+            }
+        });
     }
 }

@@ -13,25 +13,28 @@ import com.jakeesveld.flashstudyguide.model.QuizWithQuestions;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
+
 @Dao
 public interface QuizDAO {
 
     @Insert
-    void insertQuiz(Quiz quiz);
+    Completable insertQuiz(Quiz quiz);
 
     @Transaction
     @Query("SELECT * FROM quiz")
-    List<QuizWithQuestions> getAllQuizes();
+    Single<List<QuizWithQuestions>> getAllQuizes();
 
     @Update
-    void updateQuiz(Quiz quiz);
+    Completable updateQuiz(Quiz quiz);
 
     @Delete
-    int deleteQuiz(Quiz quiz);
+    Completable deleteQuiz(Quiz quiz);
 
     @Insert
-    void insertQuestion(Question question);
+    Completable insertQuestion(Question question);
 
     @Delete
-    int deleteQuestion(Question question);
+    Completable deleteQuestion(Question question);
 }
