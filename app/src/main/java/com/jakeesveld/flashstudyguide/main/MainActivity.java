@@ -10,6 +10,7 @@ import com.jakeesveld.flashstudyguide.R;
 import com.jakeesveld.flashstudyguide.data.QuizRepo;
 import com.jakeesveld.flashstudyguide.model.Quiz;
 import com.jakeesveld.flashstudyguide.newquiz.NewQuizActivity;
+import com.jakeesveld.flashstudyguide.quizdetails.QuizDetailsActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +24,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainActivityContract.view {
+public class MainActivity extends AppCompatActivity implements MainActivityContract.view, MainSavedQuizAdapter.QuizIntentCallback {
 
     RecyclerView recyclerView;
     MainSavedQuizAdapter adapter;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 
         recyclerView = findViewById(R.id.recycler_view);
-        adapter = new MainSavedQuizAdapter(quizList);
+        adapter = new MainSavedQuizAdapter(quizList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -89,5 +90,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         this.quizList.clear();
         this.quizList.addAll(quizList);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void activityIntentExecute(Quiz quiz) {
+
+        //Wrap quiz selected in bundle and pass to quiz details activity
+
+        Intent intent = new Intent(MainActivity.this, QuizDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(QuizDetailsActivity.QUIZ_KEY, quiz);
+        intent.putExtra(QuizDetailsActivity.BUNDLE_KEY, bundle);
+        startActivity(intent);
     }
 }

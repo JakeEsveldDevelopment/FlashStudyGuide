@@ -16,9 +16,11 @@ import java.util.List;
 public class MainSavedQuizAdapter extends RecyclerView.Adapter<MainSavedQuizAdapter.ViewHolder> {
 
     private List<Quiz> dataList;
+    private QuizIntentCallback callback;
 
-    public MainSavedQuizAdapter(List<Quiz> dataList) {
+    public MainSavedQuizAdapter(List<Quiz> dataList, QuizIntentCallback callback) {
         this.dataList = dataList;
+        this.callback = callback;
     }
 
     @NonNull
@@ -30,7 +32,7 @@ public class MainSavedQuizAdapter extends RecyclerView.Adapter<MainSavedQuizAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Quiz data = dataList.get(position);
+        final Quiz data = dataList.get(position);
 
         holder.textTitle.setText(data.getName());
         holder.textDescription.setText(
@@ -39,7 +41,7 @@ public class MainSavedQuizAdapter extends RecyclerView.Adapter<MainSavedQuizAdap
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                callback.activityIntentExecute(data);
             }
         });
     }
@@ -64,5 +66,10 @@ public class MainSavedQuizAdapter extends RecyclerView.Adapter<MainSavedQuizAdap
             parent = itemView.findViewById(R.id.parent);
 
         }
+    }
+
+
+    public interface QuizIntentCallback {
+        void activityIntentExecute(Quiz quiz);
     }
 }
