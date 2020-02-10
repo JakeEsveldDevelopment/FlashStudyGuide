@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,16 +25,19 @@ import com.jakeesveld.flashstudyguide.model.Quiz;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener, NewQuizContract.view{
+public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener, NewQuizContract.view, QuestionsAdapter.onAdapterClickListener, DeleteQuestionConfirmationFragment.DeleteConfirmationListener {
 
     public static final int TYPE_BOOLEAN = 1;
     public static final int TYPE_MULTIPLE = 2;
     public static final int TYPE_BOTH = 3;
     public static final String NEW_QUESTION_FRAGMENT_TAG = "newQuestion";
+    public static final String QUIZ_KEY = "quiz";
+
 
     NewQuizContract.presenter presenter;
     Quiz quiz;
     Context context;
+    boolean editing;
 
     EditText editName, editDescription;
     RadioButton radioMultiple, radioBoolean, radioBoth;
@@ -49,12 +53,12 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_quiz);
 
-
         questionsList = new ArrayList<>();
         newQuestionFragment = new NewQuestionFragment();
         context = this;
-        presenter = new NewQuizPresenter(questionsList, this, ((FlashApplication)this.getApplication()).getQuizRepo());
+        presenter = new NewQuizPresenter(questionsList, this, ((FlashApplication) this.getApplication()).getQuizRepo());
         quiz = new Quiz();
+        editing = false;
 
         editName = findViewById(R.id.edit_name);
         editDescription = findViewById(R.id.edit_description);
@@ -65,23 +69,29 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
         buttonSubmitQuiz = findViewById(R.id.button_submit_quiz);
         recyclerQuestions = findViewById(R.id.recycler_questions);
         radioGroupType = findViewById(R.id.radio_group_type);
-        adapter = new QuestionsAdapter(questionsList);
+        adapter = new QuestionsAdapter(questionsList, this);
         recyclerQuestions.setAdapter(adapter);
         recyclerQuestions.setLayoutManager(new LinearLayoutManager(this));
+
+        if (getIntent().getExtras() != null) {
+            quiz = (Quiz) getIntent().getBundleExtra("args").getSerializable(QUIZ_KEY);
+            editing = true;
+            populateViewFromEdit();
+        }
 
         buttonAddQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //If type of question has been selected, show new question fragment
-                
-                if(checkTypeSelected()) {
+
+                if (checkTypeSelected()) {
                     getSupportFragmentManager()
                             .beginTransaction()
                             .add(NewQuestionFragment.newInstance(getQuestionType(), questionsList.size(), quiz.getQuizId()), NEW_QUESTION_FRAGMENT_TAG)
                             .addToBackStack(null)
                             .commit();
-                }else{
+                } else {
                     Snackbar.make(view, "Please select question type to continue", Snackbar.LENGTH_SHORT).show();
                 }
             }
@@ -93,31 +103,46 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
                 //If quiz has name and at least one question, submit. Else show warning
 
-                if(checkFieldsValid()){
+                if (checkFieldsValid()) {
                     submitQuiz();
-                }else{
-                    Snackbar.make(view,
+                } else {
+                    Snackbar snackbar = Snackbar.make(view,
                             "Please name quiz and give at least one question before submitting",
-                            Snackbar.LENGTH_SHORT).show();
+                            Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(Color.WHITE);
+                    snackbar.show();
                 }
             }
         });
 
     }
 
+    private void populateViewFromEdit() {
+        editName.setText(quiz.getName());
+        editDescription.setText(quiz.getDescription());
+        updateView(quiz.getQuestions());
+    }
+
     private void submitQuiz() {
-        Quiz quiz = new Quiz(
-                editName.getText().toString(),
-                editDescription.getText().toString(),
-                questionsList,
-                getQuestionType()
-        );
-        presenter.saveQuiz(quiz);
+        if(editing){
+            quiz.setName(editName.getText().toString());
+            quiz.setDescription(editDescription.getText().toString());
+            quiz.setQuestions(questionsList);
+            presenter.updateQuiz(quiz);
+        }else {
+            Quiz quiz = new Quiz(
+                    editName.getText().toString(),
+                    editDescription.getText().toString(),
+                    questionsList,
+                    getQuestionType()
+            );
+            presenter.saveQuiz(quiz);
+        }
         startActivity(new Intent(NewQuizActivity.this, MainActivity.class));
     }
 
     private boolean checkFieldsValid() {
-        if(!editName.getText().toString().equals("") && questionsList.size() > 0){
+        if (!editName.getText().toString().equals("") && questionsList.size() > 0) {
             return true;
         }
         return false;
@@ -128,7 +153,7 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
     }
 
     private int getQuestionType() {
-        switch(radioGroupType.getCheckedRadioButtonId()){
+        switch (radioGroupType.getCheckedRadioButtonId()) {
             case R.id.radio_boolean:
                 return TYPE_BOOLEAN;
             case R.id.radio_group_multiple:
@@ -146,7 +171,23 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
 
     @Override
     public void updateView(List<Question> questionList) {
-        this.questionsList = questionList;
+        this.questionsList.clear();
+        this.questionsList.addAll(questionList);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onQuestionItemLongClick(Question question) {
+        DialogFragment fragment = DeleteQuestionConfirmationFragment.newInstance(
+                question, NewQuizActivity.this, NewQuizActivity.this);
+        fragment.show(getSupportFragmentManager(), "Delete");
+    }
+
+    @Override
+    public void onConfirmed(Question question, boolean confirmed) {
+        if(confirmed) {
+            questionsList.remove(question);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

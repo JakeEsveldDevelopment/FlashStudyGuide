@@ -50,24 +50,34 @@ public class QuizRepo {
                         }
                     });
             compositeDisposable.add(disposable);
+        } else {
+            callback.execute(quizList);
         }
     }
 
     public void AddQuiz(Quiz quiz) {
-        Disposable disposable = quizDAO.insertQuiz(quiz).subscribeOn(Schedulers.io()).subscribe();
+        Disposable disposable = quizDAO.insertQuiz(quiz)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
         compositeDisposable.add(disposable);
         quizList.add(quiz);
     }
 
     public void updateQuiz(Quiz quiz) {
-        Disposable disposable = quizDAO.updateQuiz(quiz).subscribeOn(Schedulers.io()).subscribe();
+        Disposable disposable = quizDAO.updateQuiz(quiz)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
         compositeDisposable.add(disposable);
+        updateList();
     }
 
     public void addQuestion(Question question) {
         compositeDisposable.add(
                 quizDAO.insertQuestion(question)
                         .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe());
     }
 
@@ -75,16 +85,39 @@ public class QuizRepo {
         compositeDisposable.add(
                 quizDAO.deleteQuestion(question)
                         .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe());
     }
 
+    public void deleteQuiz(Quiz quiz) {
+        compositeDisposable.add(
+                quizDAO.deleteQuiz(quiz.getQuizId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe());
+        updateList();
+    }
+
+    private void updateList() {
+        compositeDisposable.add(quizDAO.getAllQuizes()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<QuizWithQuestions>>() {
+                    @Override
+                    public void accept(List<QuizWithQuestions> quizWithQuestions) throws Exception {
+                        convertToQuizFromDBObject(quizWithQuestions);
+                    }
+                }));
+    }
+
     private void convertToQuizFromDBObject(List<QuizWithQuestions> quizWithQuestions) {
+        quizList.clear();
         for (QuizWithQuestions quizDBObject : quizWithQuestions) {
             quizList.add(new Quiz(quizDBObject));
         }
     }
 
-    public interface ListCallback{
+    public interface ListCallback {
         void execute(List<Quiz> quizList);
     }
 }

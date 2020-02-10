@@ -16,9 +16,11 @@ import java.util.List;
 public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.ViewHolder> {
 
     private List<Question> dataList;
+    private onAdapterClickListener listener;
 
-    public QuestionsAdapter(List<Question> dataList) {
+    public QuestionsAdapter(List<Question> dataList, onAdapterClickListener listener) {
         this.dataList = dataList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +32,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Question data = dataList.get(position);
+        final Question data = dataList.get(position);
 
         switch(data.getType()){
             case Question.TYPE_BOOLEAN:
@@ -46,6 +48,14 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
         }else{
             holder.text_question.setText(data.getText());
         }
+
+        holder.parent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                listener.onQuestionItemLongClick(data);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -56,11 +66,17 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView text_question, text_type;
+        View parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             text_question = itemView.findViewById(R.id.text_question);
             text_type = itemView.findViewById(R.id.text_type);
+            parent = itemView.findViewById(R.id.parent);
         }
+    }
+
+    public interface onAdapterClickListener{
+        void onQuestionItemLongClick(Question question);
     }
 }

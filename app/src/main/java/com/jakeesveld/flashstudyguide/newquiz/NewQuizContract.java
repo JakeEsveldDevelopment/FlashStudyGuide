@@ -12,6 +12,8 @@ public interface NewQuizContract {
 
         void saveQuiz(Quiz quiz);
 
+        void updateQuiz(Quiz quiz);
+
         void deleteQuestion(Question question);
     }
 

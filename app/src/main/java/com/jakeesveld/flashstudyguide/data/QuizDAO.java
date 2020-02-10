@@ -29,8 +29,8 @@ public interface QuizDAO {
     @Update
     Completable updateQuiz(Quiz quiz);
 
-    @Delete
-    Completable deleteQuiz(Quiz quiz);
+    @Query("DELETE FROM quiz WHERE quizId = :quizId")
+    Completable deleteQuiz(long quizId);
 
     @Insert
     Completable insertQuestion(Question question);

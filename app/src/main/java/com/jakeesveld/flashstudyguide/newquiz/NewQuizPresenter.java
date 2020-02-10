@@ -33,6 +33,11 @@ public class NewQuizPresenter implements NewQuizContract.presenter {
     }
 
     @Override
+    public void updateQuiz(Quiz quiz) {
+        repo.updateQuiz(quiz);
+    }
+
+    @Override
     public void deleteQuestion(Question question) {
         questionList.remove(question);
     }

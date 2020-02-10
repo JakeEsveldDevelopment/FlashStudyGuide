@@ -5,6 +5,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "quiz")
@@ -34,10 +35,12 @@ public class Quiz implements Serializable {
 
     @Ignore
     public Quiz(QuizWithQuestions quizWithQuestions){
+        this.quizId = quizWithQuestions.getQuiz().getQuizId();
         this.name = quizWithQuestions.getQuiz().getName();
         this.description = quizWithQuestions.getQuiz().getDescription();
         this.type = quizWithQuestions.getQuiz().getType();
-        this.questions = quizWithQuestions.getQuestions();
+        this.questions = new ArrayList<>();
+        this.questions.addAll(quizWithQuestions.getQuestions());
     }
 
     @Ignore
@@ -81,6 +84,7 @@ public class Quiz implements Serializable {
     }
 
     public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+        this.questions.clear();
+        this.questions.addAll(questions);
     }
 }
