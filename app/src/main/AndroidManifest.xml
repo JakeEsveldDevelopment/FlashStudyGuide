@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".quizdetails.QuizDetailsActivity"></activity>
+        <activity android:name=".quiz.QuizActivity"></activity>
+        <activity android:name=".quizdetails.QuizDetailsActivity" />
         <activity android:name=".newquiz.NewQuizActivity" />
         <activity
             android:name=".getting_started.GettingStartedActivity"
@@ -26,7 +27,7 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

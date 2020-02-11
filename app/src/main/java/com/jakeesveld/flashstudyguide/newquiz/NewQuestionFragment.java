@@ -66,7 +66,6 @@ public class NewQuestionFragment extends DialogFragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,14 +98,15 @@ public class NewQuestionFragment extends DialogFragment {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(checkValidFields()){
+                if (checkValidFields()) {
                     Question question = new Question(
                             editQuestion.getText().toString(),
                             getAnswer(),
                             editHint.getText().toString(),
                             questionId,
                             getType(),
-                            quizId
+                            quizId,
+                            getPossibles()
                     );
                     onButtonPressed(question);
                     dismiss();
@@ -115,31 +115,46 @@ public class NewQuestionFragment extends DialogFragment {
         });
     }
 
+    private String[] getPossibles() {
+        switch (getType()) {
+            case Question.TYPE_BOOLEAN:
+                return new String[]{"true", "false"};
+            case Question.TYPE_MULTIPLE:
+                return new String[]{
+                        radioMultipleA.getText().toString(),
+                        radioMultipleB.getText().toString(),
+                        radioMultipleC.getText().toString(),
+                        radioMultipleD.getText().toString()};
+            default:
+                return null;
+        }
+    }
+
     private int getType() {
-        if(questionType != 0){
+        if (questionType != 0) {
             return questionType;
         }
-        switch (radioGroupType.getCheckedRadioButtonId()){
+        switch (radioGroupType.getCheckedRadioButtonId()) {
             case R.id.radio_type_boolean:
-                return NewQuizActivity.TYPE_BOOLEAN;
+                return Question.TYPE_BOOLEAN;
             case R.id.radio_type_multiple:
-                return NewQuizActivity.TYPE_MULTIPLE;
+                return Question.TYPE_MULTIPLE;
         }
         return 0;
     }
 
     private String getAnswer() {
-        switch(getType()){
-            case NewQuizActivity.TYPE_BOOLEAN:
+        switch (getType()) {
+            case Question.TYPE_BOOLEAN:
                 return radioTrue.isChecked() ? "True" : "False";
-            case NewQuizActivity.TYPE_MULTIPLE:
-                if(radioMultipleA.isChecked()){
+            case Question.TYPE_MULTIPLE:
+                if (radioMultipleA.isChecked()) {
                     return "A";
-                }else if(radioMultipleB.isChecked()){
+                } else if (radioMultipleB.isChecked()) {
                     return "B";
-                }else if(radioMultipleC.isChecked()){
+                } else if (radioMultipleC.isChecked()) {
                     return "C";
-                }else{
+                } else {
                     return "D";
                 }
         }
@@ -147,22 +162,22 @@ public class NewQuestionFragment extends DialogFragment {
     }
 
     private boolean checkValidFields() {
-        if(editQuestion.getText().toString().equals("")){
+        if (editQuestion.getText().toString().equals("")) {
             return false;
         }
-        if(questionType == (NewQuizActivity.TYPE_MULTIPLE) ||
-                radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_multiple){
-            if(radioGroupMultiple.getCheckedRadioButtonId() == -1){
+        if (questionType == (Question.TYPE_MULTIPLE) ||
+                radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_multiple) {
+            if (radioGroupMultiple.getCheckedRadioButtonId() == -1) {
                 return false;
             }
         }
-        if(questionType == (NewQuizActivity.TYPE_BOOLEAN)||
-                radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_boolean){
-            if(radioGroupBoolean.getCheckedRadioButtonId() == -1){
+        if (questionType == (Question.TYPE_BOOLEAN) ||
+                radioGroupType.getCheckedRadioButtonId() == R.id.radio_type_boolean) {
+            if (radioGroupBoolean.getCheckedRadioButtonId() == -1) {
                 return false;
             }
         }
-        if(questionType == 0 && radioGroupType.getCheckedRadioButtonId() == -1){
+        if (questionType == 0 && radioGroupType.getCheckedRadioButtonId() == -1) {
             return false;
         }
         return true;
@@ -172,7 +187,7 @@ public class NewQuestionFragment extends DialogFragment {
         radioGroupMultiple.setVisibility(View.GONE);
         radioGroupBoolean.setVisibility(View.GONE);
         buttonSubmit.setVisibility(View.VISIBLE);
-        switch(i){
+        switch (i) {
             case R.id.radio_type_boolean:
                 radioGroupBoolean.setVisibility(View.VISIBLE);
                 break;
@@ -186,14 +201,14 @@ public class NewQuestionFragment extends DialogFragment {
         radioGroupMultiple.setVisibility(View.GONE);
         radioGroupBoolean.setVisibility(View.GONE);
         radioGroupType.setVisibility(View.GONE);
-        switch(questionType){
-            case NewQuizActivity.TYPE_BOOLEAN:
+        switch (questionType) {
+            case Question.TYPE_BOOLEAN:
                 radioGroupBoolean.setVisibility(View.VISIBLE);
                 break;
-            case NewQuizActivity.TYPE_MULTIPLE:
+            case Question.TYPE_MULTIPLE:
                 radioGroupMultiple.setVisibility(View.VISIBLE);
                 break;
-            case NewQuizActivity.TYPE_BOTH:
+            case Question.TYPE_BOTH:
                 radioGroupType.setVisibility(View.VISIBLE);
                 buttonSubmit.setVisibility(View.GONE);
                 break;
@@ -205,8 +220,6 @@ public class NewQuestionFragment extends DialogFragment {
             mListener.onQuestionCompleted(question);
         }
     }
-
-
 
 
     @Override

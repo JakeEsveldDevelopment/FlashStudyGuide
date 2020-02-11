@@ -25,11 +25,12 @@ import com.jakeesveld.flashstudyguide.model.Quiz;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewQuizActivity extends AppCompatActivity implements NewQuestionFragment.OnFragmentInteractionListener, NewQuizContract.view, QuestionsAdapter.onAdapterClickListener, DeleteQuestionConfirmationFragment.DeleteConfirmationListener {
+public class NewQuizActivity extends AppCompatActivity implements
+        NewQuestionFragment.OnFragmentInteractionListener,
+        NewQuizContract.view,
+        QuestionsAdapter.onAdapterClickListener,
+        DeleteQuestionConfirmationFragment.DeleteConfirmationListener {
 
-    public static final int TYPE_BOOLEAN = 1;
-    public static final int TYPE_MULTIPLE = 2;
-    public static final int TYPE_BOTH = 3;
     public static final String NEW_QUESTION_FRAGMENT_TAG = "newQuestion";
     public static final String QUIZ_KEY = "quiz";
 
@@ -92,7 +93,9 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
                             .addToBackStack(null)
                             .commit();
                 } else {
-                    Snackbar.make(view, "Please select question type to continue", Snackbar.LENGTH_SHORT).show();
+                    Snackbar snack = Snackbar.make(view, "Please select question type to continue", Snackbar.LENGTH_SHORT);
+                    snack.getView().setBackgroundColor(Color.WHITE);
+                    snack.show();
                 }
             }
         });
@@ -155,11 +158,11 @@ public class NewQuizActivity extends AppCompatActivity implements NewQuestionFra
     private int getQuestionType() {
         switch (radioGroupType.getCheckedRadioButtonId()) {
             case R.id.radio_boolean:
-                return TYPE_BOOLEAN;
+                return Question.TYPE_BOOLEAN;
             case R.id.radio_group_multiple:
-                return TYPE_MULTIPLE;
+                return Question.TYPE_MULTIPLE;
             case R.id.radio_both:
-                return TYPE_BOTH;
+                return Question.TYPE_BOTH;
         }
         return 0;
     }

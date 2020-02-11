@@ -1,7 +1,6 @@
 package com.jakeesveld.flashstudyguide.model;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -9,25 +8,35 @@ import java.io.Serializable;
 @Entity
 public class Question implements Serializable {
 
+    public static final int TYPE_BOOLEAN = 1;
+    public static final int TYPE_MULTIPLE = 2;
+    public static final int TYPE_BOTH = 3;
+
     @PrimaryKey(autoGenerate = true)
     public long questionId;
 
-    public String text, answer, hint;
+    public String text, correct, hint;
+    public String[] answers;
     public int questionNumber, type;
     public long quizId;
 
-    public static final int TYPE_MULTIPLE = 0;
-    public static final int TYPE_BOOLEAN = 1;
-
-    public Question(String text, String answer, String hint, int questionNumber, int type, long quizId) {
+    public Question(String text, String correct, String hint, int questionNumber, int type, long quizId, String[] answers) {
         this.text = text;
-        this.answer = answer;
+        this.correct = correct;
         this.hint = hint;
         this.questionNumber = questionNumber;
         this.type = type;
         this.quizId = quizId;
     }
 
+
+    public String[] getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(String[] answers) {
+        this.answers = answers;
+    }
 
     public int getQuestionNumber() {
         return questionNumber;
@@ -53,12 +62,12 @@ public class Question implements Serializable {
         this.text = text;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getCorrect() {
+        return correct;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setCorrect(String correct) {
+        this.correct = correct;
     }
 
     public String getHint() {

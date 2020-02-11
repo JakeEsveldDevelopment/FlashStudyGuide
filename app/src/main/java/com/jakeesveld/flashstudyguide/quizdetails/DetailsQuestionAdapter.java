@@ -36,10 +36,10 @@ public class DetailsQuestionAdapter extends RecyclerView.Adapter<DetailsQuestion
 
         holder.textTitle.setText(data.getText());
         switch (data.getType()){
-            case NewQuizActivity.TYPE_BOOLEAN:
+            case Question.TYPE_BOOLEAN:
                 holder.textType.setText("True/False");
                 break;
-            case NewQuizActivity.TYPE_MULTIPLE:
+            case Question.TYPE_MULTIPLE:
                 holder.textType.setText("Multiple Choice");
                 break;
         }
